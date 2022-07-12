@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Supplier Registeration</title>
 </head>
 <body>
     <div class="container">
@@ -82,8 +82,19 @@
                                 </span>
                             </td>
                             </tr>
+                            <tr align="right">
+                                <td>Confirm Password:</td>
+                                <td><input type="password" name="confirm_password" placeholder="Enter supplier password">
+                                <br>
+                                <span class="text-danger">
+                                        @error('confirm_password')
+                                        {{$message}}
+                                        @enderror
+                                </span>
+                            </td>
+                            </tr>
                             <tr>
-                                <td colspan="2" align="center"><input type="submit" value="Register"></td>
+                                <td colspan="2" align="center"><input class="btn btn-primary" type="submit" value="Register"></td>
                             </tr>
                             <tr>  
                                 <td colspan="2" align="center"><a href="suplogin">Already Registered! Click Here</a></td>

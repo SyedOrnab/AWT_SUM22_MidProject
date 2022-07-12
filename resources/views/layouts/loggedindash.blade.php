@@ -3,7 +3,7 @@
    
     </head>
     <body>
-    @include('include.header')
+    @include('include.headerindash')
     @yield('content')
     @yield('demo')
     

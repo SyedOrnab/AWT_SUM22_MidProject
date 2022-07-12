@@ -16,17 +16,32 @@ class MedicineController extends Controller
 
     public function supmedicineinfo(Request $request)
     {
+        //return $request->file('medi_image')->getClientOriginalName();
+
         $request -> validate(
             [
-                'medicine_name' => 'required|regex:/^[A-Z a-z]+$/|unique:medicines',
-                'price' => 'required',
-                'details' => 'required',
-                'availability' => 'required'
+                'medicine_name' => 'required|unique:medicines|regex:/^[A-Z a-z]+$/',
+                'price' => 'required|regex:/^([0-9])+$/i',
+                'details' => 'required|regex:/^[A-Z a-z]+$/',
+                'availability' => 'required|regex:/^([0-9])+$/i',
+                'medi_image' => 'required|mimes:jpg,png'
+            ],
+            [
+                'availability.regex' => 'Please insert numbers only',
+                'price.regex' => 'Please insert numbers only',
+                'details.regex' => 'Medicine Type must not contain numbers',
+                'medicine_name.regex' => 'Medicine Name must not contain numbers',
+                'medicine_name.unique' => 'You or another supplier already insert this Medicine Name',
+                'medi_image.required' => 'Please Insert jpg or png images',
             ]
         );
+        $medifileName = $request->medicine_name.'.'.$request->file('medi_image')->getClientOriginalExtension();
+        $request->file('medi_image')->storeAs('public/mediimage/', $medifileName);
+        //$request->file('medi_image')->store('public/uploads');  // storage->public->uploads
         $user=session()->get('logged');
         //$supplier = Supplier::where('supplier_id', $user)->get();
         $medi = new Medicine();
+        $medi->productpic = $medifileName;
         $medi->medicine_name = $request->medicine_name;
         $medi->price = $request->price;
         $medi->details = $request->details;
@@ -40,7 +55,7 @@ class MedicineController extends Controller
             //$request->session()->put('details', $medi->details);
             //$request->session()->put('availability', $medi->availability);
             //return back()->with('success','You have successfully added a new medicine list');
-            return redirect('supmedicinelist');
+            return redirect('supmedicinelist')->with('status','Successfully added a new Medicine');
         }else{
             return back()->with('error','There was an error');
         }
@@ -52,8 +67,9 @@ class MedicineController extends Controller
         return view('medicine.supmedicinecreate');
     }
 
-    public function supmedicinelist()
+    public function supmedicinelist(Request $request)
     {
+        $medicines = Medicine::paginate(2);
         $user=session()->get('logged');
         $supplier = Supplier::where('supplier_id', session()->get('logged'))->first();
       //  $medicines = Medicine::paginate(5);
@@ -61,15 +77,12 @@ class MedicineController extends Controller
                                             //   ->with('supplier',$supplier);
 
 
-                                               $medicines=DB::table('medicines')
-                                               ->join('suppliers','medicines.supplier_id','=','suppliers.supplier_id')
-                                               ->where('suppliers.supplier_id',$user)
-                                               ->select('medicines.*','suppliers.*')              
-                                               ->get();
+         $medicines=DB::table('medicines')
+         ->join('suppliers','medicines.supplier_id','=','suppliers.supplier_id')
+         ->where('suppliers.supplier_id',$user)->select('medicines.*','suppliers.*')              
+         ->get();
                                              
-                                               return view('medicine/supmedicinelist')->with('medicines',$medicines)
-                                             
-                                                                            ->with ('supplier',$supplier);
+         return view('medicine/supmedicinelist',compact('medicines'))->with('medicines',$medicines)->with ('supplier',$supplier);
                                                
     }
 

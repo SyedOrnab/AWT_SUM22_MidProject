@@ -1,3 +1,5 @@
+@extends('layouts.loggedindash')
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,14 +15,14 @@
             <div style="margin: top 20px;" align="center"> 
                <h3 colspan="2" align="center">Welcome {{$user->supplier_name}}</h3>
                <hr>
-               <a href="supmedicine" class="btn btn-primary">Medicine Info</a>
-               <a href="supmedicinecreate" class="btn btn-primary">Medicine Create</a>
+               <a href="supmedicine" class="btn btn-primary">Medicine Insert</a>
                <a href="{{route('medicine.list')}}" class="btn btn-primary">Medicine List</a>
-               <a href="supmedicinedetails" class="btn btn-primary">Medicine Details</a>
-               <a href="suplogin" class="btn btn-danger">Logout</a>
+               <a href="{{route('medicine.details')}}" class="btn btn-primary">Medicine Details</a>
+               <a href="{{route('logout')}}" class="btn btn-danger">Logout</a>
             </div>
         </div>
     </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 </html>
+@endsection

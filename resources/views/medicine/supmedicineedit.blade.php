@@ -1,12 +1,17 @@
 <html>
     <head>
-
+    
     </head>
     <body>
+        
+
     <form action="{{route('medi.edit')}}" method="post">
         @csrf
-                    <fieldset>
-                        <h1 colspan="2" align="center">Medicine Update</h1>
+                    <fieldset align="center" >
+                    @php
+                    $title=" <script>alert('**You can edit price & availability only**')</script><h1 style='color:green'>Medicine Update</h1> ";
+                    @endphp
+                        <div><h1><?php echo $title;?></h1></div>
                         <hr> 
                         {{session()->get('msg')}}         
                         @foreach($medi as $med)             

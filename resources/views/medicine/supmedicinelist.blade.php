@@ -1,34 +1,37 @@
+@extends('layouts.loggedindash')
+@section('content')
 <html>
     <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     </head>
     <body>
-    
-    <table border="1" class="table">
+    <h3 colspan="2" align="center">Medicine List</h3>
+    <hr>
+    <table border="1" class="table" class="col-5">
     <thead class="thead-dark">
-        <h3 colspan="2" align="center">New Medicine Added</h3>
-        <h4 colspan="2" align="right"><a href="dashboard" style="btn btn-danger">Back</a></h4>
     <tr>
-        <th>Serial</th>
+        <th>Product Photo</th>
         <th>Medicine Name</th>
-        <th>Price</th>
+        <th>Price(BDT)</th>
         <th>Medicine Type</th>
         <th>Availability</th>
         <th>Action</th>
     </tr>
     </thead>
     <tbody>
-        <h1>{{$supplier->supplier_name}}</h1>
-        
+        <h4 align="center">Medicine Added by {{$supplier->supplier_name}}</h4>
+        <div align="right"><a class="btn btn-primary"  href="supmedicine" >Add</a></div>
     @foreach ($medicines as $m)
     <tr>
-        <td>{{$m->medicine_id}}</td>
-        <td><a href="{{route('medicine.edit',['id'=>$m->medicine_id])}}">{{$m->medicine_name}}</a></td>
+        
+        <td>
+            <img src="{{ asset('storage/mediimage/'.$m->productpic) }}" width="100px;" height="100px;" alt="image">
+        </td>
+        <td><a href="{{route('medicine.details',['medicine_name'=>$m->medicine_name,'details'=>$m->details,'price'=>$m->price,'availability'=>$m->availability])}}">{{$m->medicine_name}}</a></td>
         <td>{{$m->price}}</td>
         <td>{{$m->details}}</td>
         <td>{{$m->availability}}</td>
-        <td><a class="btn btn-primary" href="{{route('medicine.edit',['id'=>$m->medicine_id])}}">Edit</a></td>
-        <td><a class="btn btn-danger" href="{{route('medicine.delete',['id'=>$m->medicine_id])}}">Delete</a></td>
+        <td><a class="btn btn-primary" href="{{route('medicine.edit',['id'=>$m->medicine_id])}}">Edit</a> || <a class="btn btn-danger" href="{{route('medicine.delete',['id'=>$m->medicine_id])}}">Delete</a></td>
     </tr>
     @endforeach
    
@@ -38,3 +41,4 @@
     </body>
   
 </html>
+@endsection
