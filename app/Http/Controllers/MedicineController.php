@@ -18,7 +18,7 @@ class MedicineController extends Controller
     {
         //return $request->file('medi_image')->getClientOriginalName();
 
-        $request -> validate(
+        $validator = Validator::make($request-> all(),
             [
                 'medicine_name' => 'required|unique:medicines|regex:/^[A-Z a-z]+$/',
                 'price' => 'required|regex:/^([0-9])+$/i',
@@ -26,20 +26,24 @@ class MedicineController extends Controller
                 'availability' => 'required|regex:/^([0-9])+$/i',
                 'medi_image' => 'required|mimes:jpg,png'
             ],
-            [
-                'availability.regex' => 'Please insert numbers only',
-                'price.regex' => 'Please insert numbers only',
-                'details.regex' => 'Medicine Type must not contain numbers',
-                'medicine_name.regex' => 'Medicine Name must not contain numbers',
-                'medicine_name.unique' => 'You or another supplier already insert this Medicine Name',
-                'medi_image.required' => 'Please Insert jpg or png images',
-            ]
+            // [
+            //     'availability.regex' => 'Please insert numbers only',
+            //     'price.regex' => 'Please insert numbers only',
+            //     'details.regex' => 'Medicine Type must not contain numbers',
+            //     'medicine_name.regex' => 'Medicine Name must not contain numbers',
+            //     'medicine_name.unique' => 'You or another supplier already insert this Medicine Name',
+            //     'medi_image.required' => 'Please Insert jpg or png images',
+            // ]
         );
-        $medifileName = $request->medicine_name.'.'.$request->file('medi_image')->getClientOriginalExtension();
-        $request->file('medi_image')->storeAs('public/mediimage/', $medifileName);
-        //$request->file('medi_image')->store('public/uploads');  // storage->public->uploads
-        $user=session()->get('logged');
-        //$supplier = Supplier::where('supplier_id', $user)->get();
+        if($validator->fails())
+        {
+            return response()->json($validator->errors(),422);
+        }
+        // $medifileName = $request->medicine_name.'.'.$request->file('medi_image')->getClientOriginalExtension();
+        // $request->file('medi_image')->storeAs('public/mediimage/', $medifileName);
+        // //$request->file('medi_image')->store('public/uploads');  // storage->public->uploads
+        // $user=session()->get('logged');
+        // //$supplier = Supplier::where('supplier_id', $user)->get();
         $medi = new Medicine();
         $medi->productpic = $medifileName;
         $medi->medicine_name = $request->medicine_name;
@@ -48,17 +52,17 @@ class MedicineController extends Controller
         $medi->availability = $request->availability;
         $medi->supplier_id = $user;
         $medi->save();
-        if($medi)
-        {
-            //$request->session()->put('medicine_name', $medi->medicine_name);
-            //$request->session()->put('price', $medi->price);
-            //$request->session()->put('details', $medi->details);
-            //$request->session()->put('availability', $medi->availability);
-            //return back()->with('success','You have successfully added a new medicine list');
-            return redirect('supmedicinelist')->with('status','Successfully added a new Medicine');
-        }else{
-            return back()->with('error','There was an error');
-        }
+        // if($medi)
+        // {
+        //     //$request->session()->put('medicine_name', $medi->medicine_name);
+        //     //$request->session()->put('price', $medi->price);
+        //     //$request->session()->put('details', $medi->details);
+        //     //$request->session()->put('availability', $medi->availability);
+        //     //return back()->with('success','You have successfully added a new medicine list');
+        //     return redirect('supmedicinelist')->with('status','Successfully added a new Medicine');
+        // }else{
+        //     return back()->with('error','There was an error');
+        // }
         
     }
 
