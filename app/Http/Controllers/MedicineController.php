@@ -6,6 +6,8 @@ use  Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Medicine;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Validator;
+
 
 class MedicineController extends Controller
 {
@@ -18,52 +20,35 @@ class MedicineController extends Controller
     {
         //return $request->file('medi_image')->getClientOriginalName();
 
-        $validator = Validator::make($request-> all(),
-            [
-                'medicine_name' => 'required|unique:medicines|regex:/^[A-Z a-z]+$/',
-                'price' => 'required|regex:/^([0-9])+$/i',
-                'details' => 'required|regex:/^[A-Z a-z]+$/',
-                'availability' => 'required|regex:/^([0-9])+$/i',
-                'medi_image' => 'required|mimes:jpg,png'
-            ],
-            // [
-            //     'availability.regex' => 'Please insert numbers only',
-            //     'price.regex' => 'Please insert numbers only',
-            //     'details.regex' => 'Medicine Type must not contain numbers',
-            //     'medicine_name.regex' => 'Medicine Name must not contain numbers',
-            //     'medicine_name.unique' => 'You or another supplier already insert this Medicine Name',
-            //     'medi_image.required' => 'Please Insert jpg or png images',
-            // ]
-        );
-        if($validator->fails())
-        {
-            return response()->json($validator->errors(),422);
-        }
-        // $medifileName = $request->medicine_name.'.'.$request->file('medi_image')->getClientOriginalExtension();
-        // $request->file('medi_image')->storeAs('public/mediimage/', $medifileName);
-        // //$request->file('medi_image')->store('public/uploads');  // storage->public->uploads
-        // $user=session()->get('logged');
-        // //$supplier = Supplier::where('supplier_id', $user)->get();
+        // $validator = Validator::make($request-> all(),
+        //     [
+        //         'medicine_name' => 'required|unique:medicines|regex:/^[A-Z a-z]+$/',
+        //         'price' => 'required|regex:/^([0-9])+$/i',
+        //         'details' => 'required|regex:/^[A-Z a-z]+$/',
+        //         'availability' => 'required|regex:/^([0-9])+$/i',
+        //         //'medi_image' => 'required|mimes:jpg,png'
+        //     ]
+        // );
+        // if($validator->fails())
+        // {
+        //     return response()->json($validator->errors(),422);
+        // }
+
+        Log::info('This is some useful information.');
         $medi = new Medicine();
-        $medi->productpic = $medifileName;
+       // $medi->productpic = $request->medi_image;
         $medi->medicine_name = $request->medicine_name;
         $medi->price = $request->price;
         $medi->details = $request->details;
-        $medi->availability = $request->availability;
-        $medi->supplier_id = $user;
+        $medi->availability= $request->availability;
+       // $medi->supplier_id = $user;
         $medi->save();
-        // if($medi)
-        // {
-        //     //$request->session()->put('medicine_name', $medi->medicine_name);
-        //     //$request->session()->put('price', $medi->price);
-        //     //$request->session()->put('details', $medi->details);
-        //     //$request->session()->put('availability', $medi->availability);
-        //     //return back()->with('success','You have successfully added a new medicine list');
-        //     return redirect('supmedicinelist')->with('status','Successfully added a new Medicine');
-        // }else{
-        //     return back()->with('error','There was an error');
-        // }
-        
+        return response()->json(
+            [
+                "msg"=>"Update",
+                "data"=>$medi 
+            ]
+            );
     }
 
     public function supmedicinecreate()
@@ -135,4 +120,12 @@ class MedicineController extends Controller
          return redirect()->back();
     
      }
+     function medicinedetails(){
+
+        $med = Medicine::all();
+
+        return response()->json($med);
+}
+
+
 }
